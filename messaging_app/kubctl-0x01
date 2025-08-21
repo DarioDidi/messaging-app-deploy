@@ -1,0 +1,18 @@
+#!/bin/bash
+
+echo "scaling..."
+
+kubectl scale deployment --replicas=3  messaging-app -n default
+
+kubectl get pods
+
+echo "load testing deployment"
+SERVICE_IP=$(minikube ip)
+SERVICE_PORT=$(kubectl get svc k8s-django-service -o jsonpath='{.specs.port[0].nodePort}')
+
+wrk -t6 -c200 -d30s --latency http://"$SERVICE_IP":"$SERVICE_PORT"
+
+echo "Monitoring resource usage"
+kubectl top
+
+

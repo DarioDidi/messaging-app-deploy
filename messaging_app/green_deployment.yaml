@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: messagin-app-green
+  labels:
+    app: messaging-app
+    version: green
+spec:
+  replica: 1
+  selector:
+    matchLabels:
+      app: messaging-app
+      version: green
+  template:
+    metadata:
+      labels:
+        app: messaging-app
+        version: green
+    spec:
+      containers:
+      - name: messaging-app
+          image: dariodidi/messaging-app:1.0
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        ports:
+        - containerPort: 8001
+        env:
+        - name: DJANGO_SETTINGS_MODULE
+          value: "messaging_app.settings"
